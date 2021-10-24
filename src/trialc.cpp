@@ -14,28 +14,34 @@ pMather  *bls_create()
    return m;
     // return new (std::nothrow)BlsSignature();
 }
-struct Bls bls_generate(pMather *self)
+uint8_t*  bls_generate(pMather *self, uint8_t *seedString)
 {
 
+std::vector<uint8_t> wav_vector(seedString[0], sizeof(seedString));
     BlsSignature *obj;
     obj=static_cast<BlsSignature*>(self->obj);
-        obj->generate_private_key();
-        struct Bls bls;
-        bls.obj=self;
-        bls.private_key=obj->private_key.c_str();
-        bls.public_key=obj->public_key.c_str();
-        bls.signed_key=obj->signed_key.c_str();
-        return bls;
+    // cout<<std::string(seedString) <<endl;
+    
+        vector<uint8_t> skBytes=obj->generate_private_key(wav_vector);
+        uint8_t* sk= skBytes.data();
+        
+        return sk;
+        // struct Bls bls;
+        // bls.obj=self;
+        // bls.private_key=obj->private_key.c_str();
+        // bls.public_key=obj->public_key.c_str();
+        // bls.signed_key=obj->signed_key.c_str();
+        // return bls;
 }
-EXPORT_C const char* get_public_key(pMather *self)
+EXPORT_C const char* get_public_key(pMather *self, const char* privateKeyVector)
 {
       BlsSignature *obj;
     obj=static_cast<BlsSignature*>(self->obj);
 
     // BlsSignature * p=reinterpret_cast<BlsSignature*>(self);
-        std::string val=obj->get_public_key();
+        std::string val=obj->get_public_key(std::string(privateKeyVector));
         const char* sk=val.c_str();
-        cout<<"public key is "<<sk<<endl;
+        // cout<<"public key is "<<sk<<endl;
         return sk;
 }
 EXPORT_C const char* get_signature(pMather* self)

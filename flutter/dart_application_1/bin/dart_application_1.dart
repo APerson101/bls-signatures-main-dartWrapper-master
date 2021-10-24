@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+import 'dart:convert' as c;
+
+import 'package:hex/hex.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io' show Platform, Directory;
 import 'package:ffi/ffi.dart';
 import 'dart:ffi';
+import 'package:bip39/bip39.dart' as bip39;
 
 void main(List<String> arguments) async {
   var libaryPath = path.join(
@@ -11,19 +16,53 @@ void main(List<String> arguments) async {
       .lookup<NativeFunction<Pointer<Bls> Function()>>('bls_create')
       .asFunction();
   Pointer<Bls> blsObject = blsfunction();
+  var seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
+  // var seed = bip39.generateMnemonic();
 
-  Bls Function(Pointer<Bls>) generateKeys = dylib
-      .lookup<NativeFunction<Bls Function(Pointer<Bls>)>>('bls_generate')
+  // var outBuf = allocate<Uint8>(count: outSize);
+  final Pointer<Uint8> startingPointer = calloc<Uint8>(
+    seed.length,
+  );
+  final pointerList = startingPointer.asTypedList(seed.length);
+  pointerList.setAll(0, seed);
+  print({"seed original", seed});
+  // Pointer<Uint8> things = calloc<Uint8>(seed.length);
+  // final thing = arena.allocate(seed.length);
+  // calloc<Uint8>()
+  Pointer<Uint8> Function(Pointer<Bls>, Pointer<Uint8>) generateKeys = dylib
+      .lookup<
+          NativeFunction<
+              Pointer<Uint8> Function(
+                  Pointer<Bls>, Pointer<Uint8>)>>('bls_generate')
       .asFunction();
-  final tt = generateKeys(blsObject);
-  print({
-    "private key",
-    tt.private_key.toDartString(),
-    "public key",
-    tt.public_key.toDartString(),
-    "signed key",
-    tt.signed_key.toDartString()
-  });
+  final tt = generateKeys(blsObject, startingPointer);
+  print({'private key bytes', tt.asTypedList(pointerList.length)});
+  print(HexCodec().encode(tt.asTypedList(seed.length)));
+  // print(pointerList);
+
+  // print({
+  //   "private key",
+  //   tt.private_key.toDartString(),
+  // });
+
+  // Pointer<Utf8> Function(Pointer<Bls>, Pointer<Utf8>) get_public_key = dylib
+  //     .lookup<
+  //         NativeFunction<
+  //             Pointer<Utf8> Function(
+  //                 Pointer<Bls>, Pointer<Utf8>)>>('get_public_key')
+  //     .asFunction();
+  // final pk =
+  //     get_public_key(blsObject, tt.private_key.toDartString().toNativeUtf8());
+
+  // print({
+  //   "public key",
+  //   pk.toDartString(),
+  // });
+  //   "public key",
+  //   tt.public_key.toDartString(),
+  //   "signed key",
+  //   tt.signed_key.toDartString()
+  // });
 }
 
 class Bls extends Struct {

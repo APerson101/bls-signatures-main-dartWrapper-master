@@ -11,8 +11,9 @@ struct Bls
 };
 typedef struct Bls pMather;
 EXPORT_C  pMather  *bls_create();
-EXPORT_C struct Bls bls_generate(pMather *self);
+EXPORT_C uint8_t*  bls_generate(pMather *self, uint8_t *seedString);
 EXPORT_C const char* get_private_key(pMather *self);
-EXPORT_C const char* get_public_key(pMather *self);
+EXPORT_C const char*  get_public_key(pMather *self, const char*privateKeyVector);
+// EXPORT_C const char* get_public_key(pMather *self);
 EXPORT_C const char* get_signature(pMather *self);
 
