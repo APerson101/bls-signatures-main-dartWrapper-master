@@ -4,11 +4,10 @@ class BlsSignature
 {
 	public:
         BlsSignature();
-        vector<uint8_t> generate_private_key( vector<uint8_t> seedString);
-        std::string get_public_key(std::string privateKeyVector);
-        std::string get_private();
-        std::string get_signature();
-        std::string private_key;
-        std::string public_key;
-        std::string signed_key;
+        void generate_private_key( vector<uint8_t> seedString);
+        void get_public_key(vector<uint8_t> privateKeyVector);
+        void sign(vector<uint8_t> privatekeyVector, vector<uint8_t> messageVector);
+        vector<uint8_t> private_key;
+        vector<uint8_t>  public_key;
+        vector<uint8_t> signed_key;
 };

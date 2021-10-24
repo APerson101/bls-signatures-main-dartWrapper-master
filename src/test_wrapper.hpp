@@ -5,15 +5,13 @@
 struct Bls
 {
     void* obj; 
-    const char* private_key;
-    const char* public_key;
-    const char* signed_key;
+    uint8_t* private_key;
+    uint8_t* public_key;
+    uint8_t* signed_key;
 };
 typedef struct Bls pMather;
 EXPORT_C  pMather  *bls_create();
-EXPORT_C uint8_t*  bls_generate(pMather *self, unsigned char *seedString);
-EXPORT_C const char* get_private_key(pMather *self);
-EXPORT_C const char*  get_public_key(pMather *self, const char*privateKeyVector);
-// EXPORT_C const char* get_public_key(pMather *self);
-EXPORT_C const char* get_signature(pMather *self);
+EXPORT_C void bls_generate(pMather *self, unsigned char *seedString);
+EXPORT_C void  get_public_key(pMather *self, unsigned char*privateKeyVector);
+EXPORT_C void sign(pMather *self,unsigned char*privateKeyVector, unsigned char*messageVector);
 
