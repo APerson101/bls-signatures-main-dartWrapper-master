@@ -1,0 +1,8 @@
+LIBRARY src
+
+EXPORTS
+    bls_create
+    bls_generate
+    get_private_key
+    get_public_key
+    get_signature

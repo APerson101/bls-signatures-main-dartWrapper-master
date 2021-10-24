@@ -1,0 +1,3 @@
+repository='https://github.com/Chia-Network/relic.git'
+module=''
+tag='origin'
