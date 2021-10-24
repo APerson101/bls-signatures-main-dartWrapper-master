@@ -16,7 +16,7 @@ void main(List<String> arguments) async {
       .lookup<NativeFunction<Pointer<Bls> Function()>>('bls_create')
       .asFunction();
   Pointer<Bls> blsObject = blsfunction();
-  var seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
+  var seed = bip39.mnemonicToSeed(bip39.generateMnemonic(strength: 256));
   // var seed = bip39.generateMnemonic();
 
   // var outBuf = allocate<Uint8>(count: outSize);
@@ -36,8 +36,8 @@ void main(List<String> arguments) async {
                   Pointer<Bls>, Pointer<Uint8>)>>('bls_generate')
       .asFunction();
   final tt = generateKeys(blsObject, startingPointer);
-  print({'private key bytes', tt.asTypedList(pointerList.length)});
-  print(HexCodec().encode(tt.asTypedList(seed.length)));
+  print({'private key bytes', tt.asTypedList(32)});
+  print(HexCodec().encode(tt.asTypedList(32)));
   // print(pointerList);
 
   // print({
