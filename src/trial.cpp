@@ -42,7 +42,3 @@ bool ok = AugSchemeMPL().Verify(pk, messageVector, signature);
 vector<uint8_t> signatureBytes = signature.Serialize();
 signed_key=signatureBytes;
 }
-
-int main()
-{
-}
