@@ -21,6 +21,7 @@
 #if defined GMP && ARITH == GMP
 #include <gmp.h>
 #endif
+using namespace std;
 
 #include "util.hpp"
 #include "privatekey.hpp"
@@ -53,6 +54,7 @@ class HDKeys {
 
         // Required by the ietf spec to be at least 32 bytes
         if (seed.size() < 32) {
+            cout<<"na for here e burst"<< endl;
             throw std::invalid_argument("Seed size must be at least 32 bytes");
         }
 

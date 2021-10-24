@@ -18,14 +18,20 @@ void main(List<String> arguments) async {
   Pointer<Bls> blsObject = blsfunction();
   var seed = bip39.mnemonicToSeed(bip39.generateMnemonic(strength: 256));
   // var seed = bip39.generateMnemonic();
-
+  print(seed.lengthInBytes);
   // var outBuf = allocate<Uint8>(count: outSize);
-  final Pointer<Uint8> startingPointer = calloc<Uint8>(
+  final startingPointer = calloc<Uint8>(
     seed.length,
   );
-  final pointerList = startingPointer.asTypedList(seed.length);
-  pointerList.setAll(0, seed);
-  print({"seed original", seed});
+  for (var i = 0; i < seed.length; i++) {
+    // print(seed[i]);
+    startingPointer[i] = seed[i];
+  }
+  print(startingPointer.asTypedList(seed.length));
+  // final pointerList = startingPointer.asTypedList(seed.length);
+  // pointerList.setAll(0, seed);
+  // print(pointerList);
+  // pointerList.print({"seed original", seed});
   // Pointer<Uint8> things = calloc<Uint8>(seed.length);
   // final thing = arena.allocate(seed.length);
   // calloc<Uint8>()
@@ -35,9 +41,10 @@ void main(List<String> arguments) async {
               Pointer<Uint8> Function(
                   Pointer<Bls>, Pointer<Uint8>)>>('bls_generate')
       .asFunction();
-  final tt = generateKeys(blsObject, startingPointer);
+  final tt = generateKeys(blsObject, startingPointer.cast<Uint8>());
   print({'private key bytes', tt.asTypedList(32)});
-  print(HexCodec().encode(tt.asTypedList(32)));
+  calloc.free(startingPointer);
+  // print(HexCodec().encode(tt.asTypedList(32)));
   // print(pointerList);
 
   // print({

@@ -14,18 +14,52 @@ pMather  *bls_create()
    return m;
     // return new (std::nothrow)BlsSignature();
 }
-uint8_t*  bls_generate(pMather *self, uint8_t *seedString)
+uint8_t*  bls_generate(pMather *self, unsigned char *seedString)
 {
 
-std::vector<uint8_t> wav_vector(seedString[0], sizeof(seedString));
+// vector<uint8_t> vuc(static_cast<uint8_t*>(seedString), static_cast<uint8_t*>(seedString) + 32);
+    // cout<<"element in seedString"<<vuc.at(0)<<endl;
+    // cout<<"element in seedString"<<vuc[1]<<endl;
+    // cout<<"element in seedString"<<vuc[2]<<endl;
+// cout<<"vector c"<<unsigned(&seedString)<<endl;
+// std::vector<uint8_t> wav_vector(seedString, sizeof(seedString));
+// std::vector<unsigned char> buf=reinterpret_cast<char*>(seedString);
+uint8_t* myuint8array = (uint8_t*)seedString;
+vector<uint8_t> values(64) ;
+// (myuint8array, myuint8array +64);
+for( size_t i = 0 ; i < 64 ; i++ )
+{
+    values[i] = unsigned(myuint8array[i]) ;
+}
+
+// for( size_t i = 0 ; i < 64 ; i++ )
+// {
+//     cout<<unsigned(values[i]);
+// }
+// cout<<endl;
+// vector<uint8_t*>& v = *reinterpret_cast<vector<uint8_t*> *>(myuint8array);
     BlsSignature *obj;
     obj=static_cast<BlsSignature*>(self->obj);
     // cout<<std::string(seedString) <<endl;
-    
-        vector<uint8_t> skBytes=obj->generate_private_key(wav_vector);
+    std::vector<uint8_t> my_vector(8);
+        vector<uint8_t> skBytes=obj->generate_private_key(values);
+        cout<<"this is the bytes for c code"<<endl;
+
+        for(int i=0; i<skBytes.size();i++)
+{
+    cout<<unsigned(skBytes[i]);
+}
+cout<<endl;
         uint8_t* sk= skBytes.data();
+        for (int i = 0; i < 32; i++)
+        {
+            cout<<unsigned(sk[i]);
+        }
+        cout<<endl;
         
         return sk;
+
+        // return sk;
         // struct Bls bls;
         // bls.obj=self;
         // bls.private_key=obj->private_key.c_str();

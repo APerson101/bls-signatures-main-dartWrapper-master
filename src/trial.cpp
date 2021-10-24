@@ -31,11 +31,20 @@ vector<uint8_t> BlsSignature::generate_private_key(vector<uint8_t> seedString)
 //         ss << hex << int(item);
 //     }
 //     s2 = ss.str();
+ 
+for( size_t i = 0 ; i < seedString.size() ; i++ )
+{
+    cout<<unsigned(seedString[i]);
+}
+cout<<endl;
 PrivateKey sk = AugSchemeMPL().KeyGen(seedString);
+cout<<"private key cretaed with success"<<endl;
 vector<uint8_t> skBytes = sk.Serialize();
-
-    cout<<skBytes.data()<<endl;
-
+for(int i=0; i<skBytes.size();i++)
+{
+    cout<<unsigned(skBytes[i]);
+}
+cout<<endl;
 cout<<Util::HexStr(skBytes)<<endl;
 return skBytes;
 // PrivateKey sk = PrivateKey::FromByteVector(getRandomSeed(), true);
